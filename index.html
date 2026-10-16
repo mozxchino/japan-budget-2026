@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="งบญี่ปุ่น">
+<meta name="theme-color" content="#FBF6EE">
+<title>งบทริปญี่ปุ่น</title>
+<style>
+:root{--paper:#FBF6EE;--card:#FFFDF9;--ink:#2E3A59;--muted:#7A6F5E;--line:#E8DCC8;--dash:#E0D2BC;--track:#EFE6D6;--sakura:#F4B6C2;--sakura-ink:#6B2238;--red:#B23A48;--red-soft:#FBE9EC;--ok:#5E8C4A;--ok-soft:#EEF5E6;--warn:#9A6B12;--warn-soft:#FDF3DC}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Sukhumvit Set","Thonburi",system-ui,sans-serif;-webkit-text-size-adjust:100%}
+body{padding:env(safe-area-inset-top) 0 calc(76px + env(safe-area-inset-bottom))}
+main{max-width:560px;margin:0 auto;padding:12px 16px 72px}
+h2{font-size:17px;margin:18px 0 8px;font-weight:600}
+button{font:inherit;color:inherit;cursor:pointer}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0}
+.dash{border-top:1.5px dashed var(--dash);margin:12px 0}
+.muted{color:var(--muted)}.small{font-size:13px}.tiny{font-size:12px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.big{font-size:30px;font-weight:700;letter-spacing:-.5px;line-height:1.15}
+.mid{font-size:20px;font-weight:600}
+.red{color:var(--red)}.okc{color:var(--ok)}
+.tape{display:inline-block;background:var(--sakura);color:var(--sakura-ink);padding:3px 12px;transform:rotate(-1.5deg);font-size:13px;font-weight:600}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1.5px solid var(--dash);background:var(--card);border-radius:14px;padding:5px 11px;font-size:14px;min-height:36px}
+.chip.on{background:var(--sakura);border-color:#E07A8B;color:var(--sakura-ink);font-weight:600}
+.chip.dot-over{border-color:var(--red)}
+.photo{height:96px;border-radius:14px;background:repeating-linear-gradient(45deg,#F3EADB 0 10px,#F7F0E4 10px 20px);display:flex;align-items:flex-end;padding:10px;margin:10px 0 4px;font-size:13px;color:var(--muted)}
+.bar{height:11px;border-radius:11px;background:var(--track);overflow:hidden;margin:4px 0 2px;position:relative}
+.bar i{display:block;height:100%;border-radius:11px;width:0;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.bar.over i{background:#E07A8B!important}
+.cat{margin:10px 0 12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{background:#F6EFE3;border-radius:12px;padding:9px 10px;min-width:0}
+.stat b{display:block;font-size:17px}
+.item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--dash);cursor:pointer}
+.item:last-child{border-bottom:0}
+.item .main{flex:1;min-width:0;overflow-wrap:anywhere}
+.item .amt{text-align:right;white-space:nowrap}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:9px;background:#F1EADF;color:var(--muted);margin-top:3px}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}.tag.re{background:var(--warn-soft);color:var(--warn)}.tag.qt{background:var(--red-soft);color:var(--red)}
+.pill{display:inline-block;border:1.5px solid var(--dash);background:var(--card);border-radius:12px;padding:6px 10px;font-size:13px}
+.pill.paid{background:var(--ok-soft);border-color:#BFD8AE;color:var(--ok)}
+.pill.skip{background:#F1EEE9;color:var(--muted);text-decoration:line-through}
+.tip{background:var(--card);border:1.5px dashed var(--dash);border-radius:12px;padding:9px 11px;margin:6px 0;font-size:14px}
+.tip.bad{border-color:#E9A3AE;background:var(--red-soft)}
+.tip.good{border-color:#BFD8AE;background:var(--ok-soft)}
+.tabbar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:5}
+.tabbar button{flex:1;border:0;background:none;padding:8px 4px;font-size:14px;color:var(--muted);border-radius:12px;min-height:44px}
+.tabbar button.on{color:var(--sakura-ink);background:#FBEFF2;font-weight:600}
+.fab{position:fixed;right:16px;bottom:calc(80px + env(safe-area-inset-bottom));width:58px;height:58px;border-radius:50%;border:0;background:#D7263D;color:#fff;font-size:30px;line-height:1;box-shadow:0 4px 12px rgba(46,58,89,.25);z-index:6}
+dialog{border:0;border-radius:20px;padding:0;width:min(520px,calc(100% - 24px));max-height:calc(100% - 24px);background:var(--paper);color:var(--ink)}
+dialog::backdrop{background:rgba(46,58,89,.4)}
+.dlg{padding:16px}
+label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+input,select{font:inherit;font-size:16px;width:100%;padding:10px 12px;border:1.5px solid var(--dash);border-radius:12px;background:var(--card);color:var(--ink);min-width:0}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{border:1.5px solid var(--dash);background:var(--card);border-radius:12px;padding:7px 11px;font-size:14px;min-height:40px}
+.seg button.on{background:var(--sakura);border-color:#E07A8B;color:var(--sakura-ink);font-weight:600}
+.btn{border:0;border-radius:14px;padding:12px 16px;font-size:16px;font-weight:600;min-height:48px}
+.btn.pri{background:#D7263D;color:#fff}.btn.sec{background:#EFE6D6}.btn.del{background:none;color:var(--red)}
+.btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}.btns .btn{flex:1}
+.err{color:var(--red);font-size:13px;margin-top:4px;min-height:1em}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{padding:7px 4px;border-bottom:1px dashed var(--dash);text-align:right}
+td:first-child,th:first-child{text-align:left}
+th{color:var(--muted);font-weight:500}
+tr.go{cursor:pointer}
+.banner{background:var(--warn-soft);color:var(--warn);border-radius:12px;padding:9px 11px;font-size:14px;margin:8px 0}
+</style>
+</head>
+<body>
+<main id="v"></main>
+<button class="fab" id="fab" aria-label="เพิ่มค่าใช้จ่าย">+</button>
+<nav class="tabbar">
+<button data-tab="day">วันนี้</button>
+<button data-tab="trip">ภาพรวม</button>
+<button data-tab="set">ตั้งค่า/Backup</button>
+</nav>
+<dialog id="dlg"><form class="dlg" id="form" method="dialog"></form></dialog>
+<script>
+'use strict';
+// ---------- static trip data ----------
+// w = share of the food budget (arrival/departure days count as half a day)
+const DAYS=[
+{d:9,place:'ถึงโอซาก้า · KIX → Rapi:t',w:.5},
+{d:10,place:'ปราสาทโอซาก้า → อ่าวโอซาก้า',w:1},
+{d:11,place:'Kyoto East · Fushimi Inari → Kiyomizu',w:1},
+{d:12,place:'Kyoto West · Arashiyama → Kinkaku-ji',w:1},
+{d:13,place:'Osaka · Kuromon → Shitennoji',w:1},
+{d:14,place:'Nara · Todai-ji',w:1},
+{d:15,place:'Shinkansen → Tokyo · Senso-ji',w:1},
+{d:16,place:'ขับรถ Tokyo → Yamanakako',w:1},
+{d:17,place:'Kawaguchiko → Ueno',w:1},
+{d:18,place:'Tokyo West · Meiji Jingu · Shibuya Sky',w:1},
+{d:19,place:'Narita → กรุงเทพ',w:.5}
+];
+const CATS={
+food:{n:'อาหาร',c:'#A8C686'},
+train:{n:'รถไฟ/รถไฟฟ้า',c:'#F2C14E'},
+taxi:{n:'แท็กซี่/รถรับส่ง',c:'#9DB7D5'},
+car:{n:'รถเช่า',c:'#7C93B8'},
+fuel:{n:'น้ำมัน/ทางด่วน/จอด',c:'#C98B4A'},
+ticket:{n:'ค่าเข้า/ตั๋วเที่ยว',c:'#C7A6D9'},
+stay:{n:'ที่พัก',c:'#E8B4A0'},
+misc:{n:'อื่นๆ (ใช้เงินสำรอง)',c:'#BDB2A0'},
+flight:{n:'ค่าเครื่องบิน',c:'#8FA3AD',out:1},
+shop:{n:'Shopping/ของฝาก',c:'#E07A8B',out:1},
+outx:{n:'อื่นๆ นอกกอง',c:'#A8A39A',out:1}
+};
+const DAY_CATS=['food','train','taxi','car','fuel','ticket'];
+const TAGS={ok:'✓ ยืนยันแล้ว',re:'◷ ตรวจอีกครั้งใกล้วันเดินทาง',ap:'ประมาณ',qt:'ราคาเสนอ · ยังไม่จอง'};
+// [day, cat, label, low, high, cur, tag, extra]  extra: pre=paid before trip, paid=amount, opt=optional, note
+const SEED=[
+[9,'flight','เที่ยวบิน XJ610 ไป + TG643 กลับ · 4 คน',78720,78720,'THB','ok',{pre:1,paid:78720}],
+[9,'stay','Mutsumi 703 Osaka · 9–15 พ.ย.',10974.24,10974.24,'THB','ok',{pre:1,paid:10974.24}],
+[9,'train','Rapi:t KIX → Shin-Imamiya · ¥1,410×4',5640,5640,'JPY','ok'],
+[10,'train','JR Shin-Imamiya → Osakajokoen · ¥200×4',800,800,'JPY','re'],
+[10,'train','Road Train JO-TERRACE → Gokurakubashi · ¥400×4',1600,1600,'JPY','re'],
+[10,'ticket','Osaka Castle Main Tower + Stone Wall Museum · ¥1,200×4',4800,4800,'JPY','re'],
+[10,'train','Road Train Gokurakubashi → JO-TERRACE · ¥400×4',1600,1600,'JPY','re'],
+[10,'train','JR Osakajokoen → Kyobashi · ¥150×4',600,600,'JPY','re'],
+[10,'train','JR Kyobashi → Morinomiya · ¥150×4',600,600,'JPY','re'],
+[10,'train','Metro Morinomiya → Osakako · ¥290×4',1160,1160,'JPY','re'],
+[10,'ticket','Kaiyukan (ถ้าเข้า) · ¥2,700–3,500×4',10800,14000,'JPY','re',{opt:1}],
+[10,'train','Metro Osakako → Dobutsuen-mae · ¥290×4',1160,1160,'JPY','re'],
+[11,'train','Metro Dobutsuen-mae → Kitahama · ¥240×4',960,960,'JPY','re'],
+[11,'train','Keihan Kitahama → Fushimi-Inari · ¥480×4',1920,1920,'JPY','re'],
+[11,'train','Keihan Fushimi-Inari → Kiyomizu-Gojo · ¥240×4',960,960,'JPY','re'],
+[11,'taxi','Taxi Kiyomizu-Gojo → Kiyomizu-dera · 1 คัน',700,1000,'JPY','ap'],
+[11,'ticket','Kiyomizu-dera · ¥500×4',2000,2000,'JPY','re'],
+[11,'train','Kyoto-Kawaramachi → Dobutsuen-mae · ¥650×4',2600,2600,'JPY','re'],
+[12,'train','JR → Saga-Arashiyama · ¥1,120×4',4480,4480,'JPY','re'],
+[12,'ticket','Tenryu-ji garden · ¥500×4',2000,2000,'JPY','re'],
+[12,'taxi','Taxi Arashiyama → Kinkaku-ji · 1 คัน',3000,3700,'JPY','ap'],
+[12,'ticket','Kinkaku-ji · ¥500×4',2000,2000,'JPY','re'],
+[12,'taxi','Taxi Kinkaku-ji → JR Enmachi · 1 คัน',1200,1600,'JPY','ap'],
+[12,'train','JR Enmachi → Mutsumi 703 · ¥960×4',3840,3840,'JPY','re'],
+[13,'train','Metro Dobutsuen-mae → Nippombashi · ¥190×4',760,760,'JPY','re'],
+[13,'taxi','Taxi Kuromon → Shitennoji · 1 คัน',1200,1600,'JPY','ap'],
+[13,'ticket','Shitennoji Central Temple · ¥500×4',2000,2000,'JPY','re'],
+[13,'taxi','Taxi Shitennoji → Tenshiba · 1 คัน',600,900,'JPY','ap'],
+[13,'train','Metro Tennoji → Mutsumi 703 · ¥190×4',760,760,'JPY','re'],
+[13,'train','Metro Dobutsuen-mae → Namba · ¥190×4',760,760,'JPY','re'],
+[13,'train','Metro Namba → Mutsumi 703 · ¥190×4',760,760,'JPY','re'],
+[14,'train','Metro + Kintetsu → Kintetsu-Nara · ¥870×4',3480,3480,'JPY','re'],
+[14,'taxi','Taxi Kintetsu-Nara → Todai-ji · 1 คัน',750,1100,'JPY','ap'],
+[14,'ticket','Todai-ji Great Buddha Hall · ¥800×4',3200,3200,'JPY','re'],
+[14,'taxi','Taxi Todai-ji → Kintetsu-Nara · 1 คัน',750,1100,'JPY','ap'],
+[14,'train','Kintetsu + Metro → Mutsumi 703 · ¥870×4',3480,3480,'JPY','re'],
+[15,'train','Metro Mutsumi 703 → Shin-Osaka · ¥290×4',1160,1160,'JPY','re'],
+[15,'train','Nozomi 4 Shin-Osaka 09:06 → Tokyo 11:33 · 4 คน (Klook)',13000,13000,'THB','ap',{pre:1,paid:13000,note:'จ่ายราว ฿13,000 · รอยอดจริงจาก email แล้วแก้ตรงนี้'}],
+[15,'train','JR Tokyo → REVO Ueno · ¥180–210×4',720,840,'JPY','re'],
+[15,'taxi','Taxi REVO ↔ Senso-ji ไป-กลับ',3500,4500,'JPY','ap'],
+[15,'stay','REVO Ueno · 15–19 พ.ย. 4 คืน',22672.36,22672.36,'THB','ok',{pre:1,paid:22672.36}],
+[16,'car','Toyota W1/Sienta · 16 พ.ย. 08:00 → 17 พ.ย. ≤20:00',35090,35090,'JPY','qt'],
+[16,'fuel','น้ำมัน + ทางด่วน ETC + จอดรถ · 16–17 พ.ย.',0,0,'JPY','ap',{note:'ยังไม่ได้ประเมิน · กดแก้ใส่งบเองได้'}],
+[16,'stay','Solana Fujiyamanakako · 16–17 พ.ย.',6206.79,6206.79,'THB','ok',{pre:1,paid:6206.79}],
+[18,'ticket','Shibuya Sky รอบ 15:20 · ¥3,400×4 (เปิดขาย 4 พ.ย.)',13600,13600,'JPY','re'],
+[18,'taxi','งบแท็กซี่/Metro ตามแรงพ่อแม่',10000,14000,'JPY','ap'],
+[19,'taxi','รถ REVO → NRT T1 07:00 · Premium 6 ที่นั่ง',4995.17,4995.17,'THB','ok',{pre:1,paid:4995.17}]
+];
+const DEFAULTS={fund:200000,food:70000,reserve:20000,fx:0.2067};
+const KEY='jp26-budget-v1';
+
+// ---------- state ----------
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+function seedState(){
+  return {...DEFAULTS,lastBackup:null,dirty:false,items:SEED.map(([day,cat,label,low,high,cur,tag,x={}])=>({
+    id:uid(),day,cat,label,low,high,cur,tag,pre:!!x.pre,opt:!!x.opt,note:x.note||'',
+    st:x.paid!=null?'paid':'plan',paid:x.paid!=null?x.paid:null,sub:null,extra:false}))};
+}
+function validState(s){
+  return !!s&&typeof s==='object'&&Array.isArray(s.items)&&['fund','food','reserve','fx'].every(k=>typeof s[k]==='number'&&isFinite(s[k]))&&s.fx>0
+    &&s.items.every(it=>it&&typeof it.day==='number'&&DAYS.some(x=>x.d===it.day)&&CATS[it.cat]&&(it.cur==='JPY'||it.cur==='THB')&&isFinite(it.low)&&isFinite(it.high));
+}
+let S;
+try{const raw=localStorage.getItem(KEY);S=raw?JSON.parse(raw):null;}catch(e){S=null}
+if(!validState(S))S=seedState();
+let storageOK=true;
+function save(markDirty=true){
+  if(markDirty)S.dirty=true;
+  try{localStorage.setItem(KEY,JSON.stringify(S));storageOK=true}catch(e){storageOK=false}
+}
+
+// ---------- money math ----------
+const r2=n=>Math.round(n*100)/100;
+const toTHB=(a,cur)=>cur==='THB'?a:a*S.fx;
+const toJPY=(a,cur)=>cur==='JPY'?a:a/S.fx;
+const yen=n=>'¥'+Math.round(n).toLocaleString('en-US');
+const baht=n=>'฿'+r2(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});
+const bahtR=n=>'฿'+Math.round(n).toLocaleString('en-US');
+const range=(f,a,b)=>Math.round(a)===Math.round(b)?f(a):f(a)+'–'+f(b).replace(/^[¥฿]/,'');
+const inFund=it=>!CATS[it.cat].out;
+// committed amount of one item, in its own currency [low, high]
+function commit(it){
+  if(it.st==='paid')return[it.paid||0,it.paid||0];
+  if(it.st==='skip')return[0,0];
+  return[it.low,it.high];
+}
+const spent=it=>it.st==='paid'?(it.paid||0):0;
+const totalW=()=>DAYS.reduce((a,x)=>a+x.w,0);
+// trip day number of "now": 8 before the trip, 20 after it
+let NOW=()=>new Date();
+function refDay(){const n=NOW();if(n<new Date(2026,10,9))return 8;if(n>=new Date(2026,10,20))return 20;return n.getDate()}
+const dayW=d=>DAYS.find(x=>x.d===d).w;
+function foodSpentDay(d){return S.items.filter(it=>it.cat==='food'&&it.day===d).reduce((a,it)=>a+toJPY(spent(it),it.cur),0)}
+function foodPlanDay(d){return toJPY(S.food,'THB')*dayW(d)/totalW()}
+// today and earlier: what is really left of the food budget, spread over the remaining days (by weight).
+// future days keep the plain plan, so days nobody has logged yet don't roll forward early.
+function foodLeftDay(d){
+  if(d>refDay())return foodPlanDay(d);
+  const before=DAYS.filter(x=>x.d<d).reduce((a,x)=>a+foodSpentDay(x.d),0);
+  const wLeft=DAYS.filter(x=>x.d>=d).reduce((a,x)=>a+x.w,0);
+  return Math.max(0,toJPY(S.food,'THB')-before)*dayW(d)/wLeft;
+}
+// one day of cash spending in JPY (excludes things paid before the trip and out-of-fund items)
+function dayCalc(d){
+  const its=S.items.filter(it=>it.day===d);
+  const cash=its.filter(it=>!it.pre&&inFund(it));
+  const cats={};
+  for(const c of DAY_CATS)cats[c]={low:0,high:0,spent:0};
+  let reserveUsed=0;
+  for(const it of cash){
+    if(it.cat==='misc'){reserveUsed+=toTHB(spent(it),it.cur);continue}
+    const k=it.cat;if(!cats[k])cats[k]={low:0,high:0,spent:0};
+    if(it.cat!=='food'&&it.st!=='skip'){cats[k].low+=toJPY(it.low,it.cur);cats[k].high+=toJPY(it.high,it.cur)}
+    cats[k].spent+=toJPY(spent(it),it.cur);
+  }
+  const fl=foodLeftDay(d);cats.food.low=fl;cats.food.high=fl;
+  let low=0,high=0,sp=0;
+  for(const c in cats){low+=cats[c].low;high+=cats[c].high;sp+=cats[c].spent}
+  const unpaid=cash.filter(it=>it.st==='plan'&&it.cat!=='food');
+  const out=its.filter(it=>!inFund(it)&&!it.pre).reduce((a,it)=>a+toTHB(spent(it),it.cur),0);
+  return{its,cats,low,high,spent:sp,unpaid,out,reserveUsed,foodPlan:foodPlanDay(d),foodLeft:fl,
+    over:Object.keys(cats).filter(c=>cats[c].spent>cats[c].high+0.5).map(c=>({c,by:cats[c].spent-cats[c].high}))};
+}
+// whole trip in THB
+function tripCalc(){
+  const byCat={};
+  for(const k of Object.keys(CATS))byCat[k]={low:0,high:0,spent:0};
+  let pLow=0,pHigh=0,sp=0,misc=0,outSp=0;
+  for(const it of S.items){
+    const[a,b]=commit(it),s=toTHB(spent(it),it.cur);
+    byCat[it.cat].spent+=s;
+    if(inFund(it))sp+=s;else outSp+=s;
+    if(it.cat==='food')continue;
+    byCat[it.cat].low+=toTHB(a,it.cur);byCat[it.cat].high+=toTHB(b,it.cur);
+    if(!inFund(it))continue;
+    if(it.cat==='misc')misc+=s;
+    else{pLow+=toTHB(a,it.cur);pHigh+=toTHB(b,it.cur)}
+  }
+  const foodSp=byCat.food.spent;
+  const foodAlloc=Math.max(S.food,foodSp);
+  byCat.food.low=byCat.food.high=S.food;
+  byCat.misc.low=byCat.misc.high=S.reserve;
+  const reserveAlloc=Math.max(S.reserve,misc);
+  const totLow=pLow+foodAlloc+reserveAlloc,totHigh=pHigh+foodAlloc+reserveAlloc;
+  return{pLow,pHigh,foodAlloc,foodSp,foodLeft:S.food-foodSp,reserveLeft:S.reserve-misc,misc,reserveAlloc,totLow,totHigh,
+    freeLow:S.fund-totHigh,freeHigh:S.fund-totLow,spent:sp,byCat,outSp};
+}
+window.Calc={dayCalc,tripCalc,foodLeftDay,foodPlanDay,seedState,validState,getS:()=>S,setS:x=>{S=x},setNow:f=>{NOW=f}};
+
+// ---------- view helpers ----------
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const WD=['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'];
+function todayDay(){
+  const n=new Date();
+  return n.getFullYear()===2026&&n.getMonth()===10&&n.getDate()>=9&&n.getDate()<=19?n.getDate():null;
+}
+let tab='day',cur=todayDay()||9;
+function bar(p,color,over){return `<div class="bar${over?' over':''}"><i data-w="${Math.max(0,Math.min(100,p))}" style="background:${color}"></i></div>`}
+function animateBars(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('.bar i').forEach(e=>e.style.width=e.dataset.w+'%')))}
+function tagHtml(it){return it.tag?`<span class="tag ${it.tag}">${TAGS[it.tag]}</span>`:''}
+function amtOf(it){
+  const f=it.cur==='JPY'?yen:baht;
+  if(it.st==='paid')return `<b>${f(it.paid)}</b><div class="tiny muted">${it.extra?(it.cur==='JPY'?'≈ '+baht(toTHB(it.paid,'JPY')):''):'แผน '+range(f,it.low,it.high)}</div>`;
+  return `<b>${range(f,it.low,it.high)}</b>${it.cur==='THB'?'':`<div class="tiny muted">≈ ${range(bahtR,toTHB(it.low,'JPY'),toTHB(it.high,'JPY'))}</div>`}`;
+}
+function itemRow(it,showDay){
+  const btn=it.st==='paid'?'<span class="pill paid">✓ จ่ายแล้ว</span>':it.st==='skip'?'<span class="pill skip">ไม่ใช้</span>':'<span class="pill">จ่ายแล้ว?</span>';
+  const sub=it.cat==='food'&&it.sub==='snack'?' · กินเล่น':'';
+  return `<div class="item" data-id="${it.id}"><div class="main"><div>${esc(it.label||CATS[it.cat].n)}</div>
+  <div class="tiny muted">${showDay?'Day '+it.day+' · ':''}${CATS[it.cat].n}${sub}${it.pre?' · จ่ายล่วงหน้า':''}${it.opt?' · ทางเลือก':''}</div>
+  ${tagHtml(it)}${it.note?`<div class="tiny muted">${esc(it.note)}</div>`:''}</div>
+  <div class="amt">${amtOf(it)}<div style="margin-top:4px">${btn}</div></div></div>`;
+}
+
+// ---------- day view ----------
+function viewDay(){
+  const x=DAYS.find(z=>z.d===cur),c=dayCalc(cur),t=tripCalc();
+  const dt=new Date(2026,10,cur);
+  const chips=DAYS.map(z=>{const o=dayCalc(z.d).over.length;return `<button class="chip${z.d===cur?' on':''}${o?' dot-over':''}" data-day="${z.d}">${z.d}${o?' •':''}</button>`}).join('');
+  const left=c.high-c.spent;
+  const cats=Object.keys(c.cats).filter(k=>c.cats[k].high>0||c.cats[k].spent>0).map(k=>{
+    const q=c.cats[k],p=q.high?q.spent/q.high*100:(q.spent?101:0),ov=q.spent>q.high+0.5;
+    const plan=k==='food'?`งบกินวันนี้ ${yen(q.high)}`:`แผน ${range(yen,q.low,q.high)}`;
+    let snack='';
+    if(k==='food'){const s=c.its.filter(it=>it.cat==='food'&&it.sub==='snack').reduce((a,it)=>a+toJPY(spent(it),it.cur),0);if(s)snack=` · กินเล่น ${yen(s)}`}
+    return `<div class="cat"><div class="row"><span>${CATS[k].n}</span><span class="${ov?'red':'muted'} small">${q.high||!q.spent?Math.round(p)+'%':'นอกแผน'}</span></div>
+    ${bar(p,CATS[k].c,ov)}<div class="row tiny muted"><span>ใช้ ${yen(q.spent)}${snack}</span><span>${plan}</span></div></div>`}).join('');
+  const tips=[];
+  for(const o of c.over)tips.push(`<div class="tip bad">${CATS[o.c].n} เกินแผน ${yen(o.by)} (≈ ${baht(toTHB(o.by,'JPY'))})${o.c==='food'?' · งบกินวันต่อไปจะลดลงอัตโนมัติ':' · ดึงจากเงินสำรองได้ สำรองเหลือ '+baht(t.reserveLeft)}</div>`);
+  if(c.unpaid.length){const a=c.unpaid.reduce((s,it)=>s+toJPY(it.low,it.cur),0),b=c.unpaid.reduce((s,it)=>s+toJPY(it.high,it.cur),0);tips.push(`<div class="tip">ยังต้องจ่ายตามแผนวันนี้อีก ${c.unpaid.length} รายการ · ${range(yen,a,b)}</div>`)}
+  const fdLeft=c.foodLeft-c.cats.food.spent;
+  tips.push(`<div class="tip ${fdLeft<0?'bad':'good'}">เงินกินวันนี้${fdLeft<0?'เกิน':'เหลือ'} ${yen(Math.abs(fdLeft))} · เงินกินทั้งทริปเหลือ ${baht(t.foodLeft)}${Math.abs(c.foodLeft-c.foodPlan)>50?` · แผนเดิม ${yen(c.foodPlan)} ปรับตามที่ใช้จริงแล้ว`:''}</div>`);
+  if(!c.over.length&&!c.unpaid.length&&c.spent>0)tips.push('<div class="tip good">วันนี้ใช้ตามแผน เงินที่เหลือยกไปวันถัดไป</div>');
+  const list=c.its.filter(it=>!it.extra).map(it=>itemRow(it)).join('')||'<div class="muted small">ไม่มีรายการที่วางแผนไว้</div>';
+  const extras=c.its.filter(it=>it.extra).map(it=>itemRow(it)).join('');
+  return `${banner()}
+  <div class="chips">${chips}</div>
+  <div class="card">
+    <span class="tape">Day ${cur} · ${WD[dt.getDay()]} ${cur} พ.ย.</span>
+    <div class="photo" data-photo-day="${cur}">${esc(x.place)}</div>
+    <div class="muted small" style="margin-top:8px">${left<0?'เกินงบวันนี้':'เหลือใช้วันนี้ (เทียบไม่เกิน)'}</div>
+    <div class="big ${left<0?'red':''}">${yen(Math.abs(left))}</div>
+    <div class="muted small">≈ ${baht(toTHB(Math.abs(left),'JPY'))}</div>
+    <div class="grid2" style="margin-top:10px">
+      <div class="stat"><span class="tiny muted">ตามงบ</span><b>${yen(c.low)}</b></div>
+      <div class="stat"><span class="tiny muted">ไม่เกิน</span><b>${yen(c.high)}</b></div>
+      <div class="stat"><span class="tiny muted">ใช้ไปแล้ว</span><b class="${c.spent>c.high?'red':''}">${yen(c.spent)}</b></div>
+      <div class="stat"><span class="tiny muted">ใช้สำรอง · นอกกอง</span><b>${baht(c.reserveUsed)} · ${baht(c.out)}</b></div>
+    </div>
+    <div class="dash"></div>${cats}
+  </div>
+  ${tips.join('')}
+  <h2>รายการวันนี้</h2><div class="card">${list}</div>
+  ${extras?`<h2>จ่ายเพิ่มวันนี้</h2><div class="card">${extras}</div>`:''}
+  <p class="tiny muted">ตัวเลขวันนี้ไม่รวมของที่จ่ายก่อนเดินทาง (ที่พัก/ตั๋วล่วงหน้า) · 4 คน · ¥1 = ฿${S.fx}</p>`;
+}
+
+// ---------- trip view ----------
+function viewTrip(){
+  const t=tripCalc();
+  const catRows=Object.keys(CATS).filter(k=>!CATS[k].out).map(k=>{
+    const q=t.byCat[k];const p=q.high?q.spent/q.high*100:(q.spent?101:0);const ov=q.spent>q.high+0.5;
+    return `<div class="cat"><div class="row"><span>${CATS[k].n}</span><span class="small ${ov?'red':'muted'}">${Math.round(p)}%</span></div>
+    ${bar(p,CATS[k].c,ov)}<div class="row tiny muted"><span>จ่ายแล้ว ${baht(q.spent)}</span><span>${k==='misc'?'สำรอง '+baht(S.reserve):k==='food'?'งบ '+baht(S.food):'แผน '+range(bahtR,q.low,q.high)}</span></div></div>`}).join('');
+  const outRows=Object.keys(CATS).filter(k=>CATS[k].out).map(k=>`<div class="row small" style="padding:4px 0"><span>${CATS[k].n}</span><b>${baht(t.byCat[k].spent)}</b></div>`).join('');
+  const dayRows=DAYS.map(x=>{const c=dayCalc(x.d);const st=c.over.length?'<span class="red">เกิน</span>':c.spent>0?'<span class="okc">ok</span>':'';
+    return `<tr class="go" data-day="${x.d}"><td>Day ${x.d}</td><td>${range(yen,c.low,c.high)}</td><td>${yen(c.spent)}</td><td>${st}</td></tr>`}).join('');
+  const free=t.freeLow>=0?`<b class="mid okc">${range(bahtR,t.freeLow,t.freeHigh)}</b>`:t.freeHigh<0?`<b class="mid red">เกิน ${range(bahtR,-t.freeHigh,-t.freeLow)}</b>`:`<b class="mid red">${baht(t.freeLow)} ถึง ${baht(t.freeHigh)}</b>`;
+  return `${banner()}
+  <div class="card">
+    <span class="tape">กองทริป · ไม่รวมเครื่องบิน</span>
+    <div class="muted small" style="margin-top:10px">จ่ายจริงแล้วจากกอง</div>
+    <div class="big">${baht(t.spent)}</div>
+    <div class="muted small">จาก ${baht(S.fund)} · เงินในกองเหลือจริง ${baht(S.fund-t.spent)}</div>
+    ${bar(t.spent/S.fund*100,'#A8C686',t.spent>S.fund)}
+    <div class="dash"></div>
+    <div class="row small"><span>ที่พัก+เดินทาง+ค่าเข้า+รถ</span><b>${range(bahtR,t.pLow,t.pHigh)}</b></div>
+    <div class="row small"><span>อาหาร (กันไว้)</span><b>${baht(t.foodAlloc)}</b></div>
+    <div class="row small"><span>สำรอง</span><b>${baht(t.reserveAlloc)}</b></div>
+    <div class="row small" style="margin-top:6px"><span>รวมทั้งแผน</span><b>${range(bahtR,t.totLow,t.totHigh)}</b></div>
+    <div class="row" style="margin-top:6px"><span>ยังว่างในกอง</span>${free}</div>
+    <div class="grid2" style="margin-top:10px">
+      <div class="stat"><span class="tiny muted">เงินกินเหลือ</span><b class="${t.foodLeft<0?'red':''}">${baht(t.foodLeft)}</b></div>
+      <div class="stat"><span class="tiny muted">สำรองเหลือ</span><b class="${t.reserveLeft<0?'red':''}">${baht(t.reserveLeft)}</b></div>
+    </div>
+  </div>
+  <h2>แยกตามหมวด (ในกอง ${baht(S.fund)})</h2><div class="card">${catRows}</div>
+  <h2>นอกกอง (จ่ายแยก ไม่นับใน ${baht(S.fund)})</h2><div class="card">${outRows}<div class="dash"></div><div class="row"><span>รวมนอกกอง</span><b>${baht(t.outSp)}</b></div></div>
+  <h2>รายวัน (¥ · 4 คน · ไม่รวมจ่ายล่วงหน้า)</h2><div class="card"><table><tr><th>วัน</th><th>ตามงบ–ไม่เกิน</th><th>ใช้</th><th></th></tr>${dayRows}</table></div>
+  <h2>ทุกรายการ</h2><div class="card">${S.items.slice().sort((a,b)=>a.day-b.day).map(it=>itemRow(it,true)).join('')}</div>`;
+}
+
+// ---------- settings ----------
+function viewSet(){
+  const lb=S.lastBackup?new Date(S.lastBackup).toLocaleString('th-TH'):'ยังไม่เคย';
+  return `<h2>Backup</h2><div class="card">
+  <div class="small muted">ข้อมูลเก็บในเครื่องนี้เท่านั้น · Backup ล่าสุด: ${esc(lb)}</div>
+  <div class="small muted">กด Backup แล้วเลือก "บันทึกไปยังไฟล์" หรือส่งเข้า LINE ตัวเอง</div>
+  <div class="btns"><button type="button" class="btn pri" id="exp">Backup (ส่งออกไฟล์)</button></div>
+  <div class="btns"><button type="button" class="btn sec" id="impBtn">กู้คืนจากไฟล์</button></div>
+  <input type="file" id="imp" accept="application/json,.json" hidden>
+  <div class="err" id="impErr"></div></div>
+  <h2>ตั้งค่างบ</h2><div class="card">
+  <label>กองทริป (฿, ไม่รวมเครื่องบิน)</label><input id="sFund" inputmode="decimal" value="${S.fund}">
+  <label>งบอาหารทั้งทริป (฿)</label><input id="sFood" inputmode="decimal" value="${S.food}">
+  <label>เงินสำรอง (฿)</label><input id="sRes" inputmode="decimal" value="${S.reserve}">
+  <label>อัตรา ฿ ต่อ ¥1</label><input id="sFx" inputmode="decimal" value="${S.fx}">
+  <div class="err" id="setErr"></div>
+  <div class="btns"><button type="button" class="btn pri" id="saveSet">บันทึก</button></div></div>
+  <h2>เริ่มใหม่</h2><div class="card"><div class="small muted">ล้างทุกอย่างกลับเป็นแผนตั้งต้น ควร Backup ก่อน</div>
+  <div class="btns"><button type="button" class="btn del" id="reset">ล้างข้อมูลทั้งหมด</button></div></div>`;
+}
+function banner(){
+  if(!storageOK)return '<div class="banner">บันทึกลงเครื่องไม่ได้ (โหมดส่วนตัว?) ข้อมูลอาจหาย · กด Backup ไว้ก่อน</div>';
+  if(S.dirty&&(!S.lastBackup||Date.now()-S.lastBackup>864e5))return '<div class="banner">มีรายการใหม่ยังไม่ได้ Backup · ไปที่แท็บตั้งค่า/Backup</div>';
+  return '';
+}
+
+// ---------- render ----------
+function render(){
+  $('#v').innerHTML=tab==='day'?viewDay():tab==='trip'?viewTrip():viewSet();
+  document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+  $('#fab').style.display=tab==='set'?'none':'';
+  animateBars();
+  if(tab==='day'){const on=document.querySelector('.chip.on');if(on)on.scrollIntoView({inline:'center',block:'nearest'})}
+  if(tab==='set')bindSet();
+}
+document.querySelector('.tabbar').addEventListener('click',e=>{const b=e.target.closest('button');if(b){tab=b.dataset.tab;render();scrollTo(0,0)}});
+$('#v').addEventListener('click',e=>{
+  const ch=e.target.closest('[data-day]');
+  if(ch){cur=+ch.dataset.day;const fromTable=ch.tagName==='TR';tab='day';render();if(fromTable)scrollTo(0,0);return}
+  const it=e.target.closest('.item');if(it)openEdit(S.items.find(z=>z.id===it.dataset.id));
+});
+$('#fab').addEventListener('click',()=>openEdit(null));
+
+// ---------- add / edit dialog ----------
+const dlg=$('#dlg'),form=$('#form');
+const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)?n:NaN};
+function openEdit(it){
+  const isNew=!it;
+  const m=it?{...it}:{id:uid(),day:cur,cat:'food',label:'',low:0,high:0,cur:'JPY',tag:null,pre:false,opt:false,note:'',st:'paid',paid:null,sub:'meal',extra:true};
+  const catBtns=Object.keys(CATS).map(k=>`<button type="button" data-cat="${k}" class="${m.cat===k?'on':''}">${CATS[k].n}</button>`).join('');
+  form.innerHTML=`<div class="row"><b class="mid">${isNew?'จ่ายเพิ่ม':'แก้รายการ'}</b><button type="button" class="pill" id="x">ปิด</button></div>
+  ${m.tag?tagHtml(m):''}
+  <label>หมวด</label><div class="seg" id="fCat">${catBtns}</div>
+  <div id="fSubWrap"${m.cat==='food'?'':' hidden'}><label>ประเภทอาหาร</label><div class="seg" id="fSub"><button type="button" data-sub="meal" class="${m.sub!=='snack'?'on':''}">มื้อหลัก</button><button type="button" data-sub="snack" class="${m.sub==='snack'?'on':''}">กินเล่น/ขนม/เครื่องดื่ม</button></div></div>
+  <label>จ่ายจริง</label>
+  <div style="display:flex;gap:6px"><input id="fPaid" inputmode="decimal" placeholder="${m.extra?'เช่น 1200':Math.round(m.low)}" value="${m.paid!=null?m.paid:''}" style="flex:1">
+  <div class="seg" id="fCur" style="flex-wrap:nowrap"><button type="button" data-cur="JPY" class="${m.cur==='JPY'?'on':''}">¥</button><button type="button" data-cur="THB" class="${m.cur==='THB'?'on':''}">฿</button></div></div>
+  <div class="err" id="fErr"></div>
+  ${m.extra?'':`<label>สถานะ</label><div class="seg" id="fSt"><button type="button" data-st="plan" class="${m.st==='plan'?'on':''}">ยังไม่จ่าย</button><button type="button" data-st="paid" class="${m.st==='paid'?'on':''}">จ่ายแล้ว</button><button type="button" data-st="skip" class="${m.st==='skip'?'on':''}">ไม่ใช้</button></div>
+  <div class="grid2"><div><label>ตามงบ (ต่ำสุด)</label><input id="fLow" inputmode="decimal" value="${m.low}"></div><div><label>ไม่เกิน</label><input id="fHigh" inputmode="decimal" value="${m.high}"></div></div>`}
+  <label>รายละเอียด</label><input id="fLabel" value="${esc(m.label)}" placeholder="ราเม็ง 4 ที่">
+  <div class="grid2"><div><label>วัน</label><select id="fDay">${DAYS.map(x=>`<option value="${x.d}"${x.d===m.day?' selected':''}>Day ${x.d}</option>`).join('')}</select></div>
+  <div><label>จ่ายก่อนเดินทาง</label><select id="fPre"><option value="0">ไม่ใช่</option><option value="1"${m.pre?' selected':''}>ใช่</option></select></div></div>
+  <label>หมายเหตุ</label><input id="fNote" value="${esc(m.note||'')}">
+  <div class="btns"><button type="button" class="btn pri" id="ok">บันทึก</button></div>
+  ${isNew?'':'<div class="btns"><button type="button" class="btn del" id="del">ลบรายการนี้</button></div>'}`;
+  const paidIn=form.querySelector('#fPaid'),err=form.querySelector('#fErr');
+  const seg=(id,attr,key)=>{const el=form.querySelector(id);if(!el)return;el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;m[key]=b.dataset[attr];el.querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b));
+    if(key==='cat')form.querySelector('#fSubWrap').hidden=m.cat!=='food';
+    if(key==='st'&&m.st==='paid'&&!paidIn.value&&m.low===m.high)paidIn.value=m.low;})};
+  seg('#fCat','cat','cat');seg('#fSub','sub','sub');seg('#fCur','cur','cur');seg('#fSt','st','st');
+  paidIn.addEventListener('input',()=>{err.textContent='';if(!m.extra&&paidIn.value&&m.st==='plan'){m.st='paid';form.querySelectorAll('#fSt button').forEach(z=>z.classList.toggle('on',z.dataset.st==='paid'))}});
+  form.querySelector('#x').onclick=()=>dlg.close();
+  form.querySelector('#ok').onclick=()=>{
+    const p=paidIn.value.trim(),pv=num(p);
+    if(m.extra||m.st==='paid'){if(!p||!(pv>=0)){err.textContent='ใส่จำนวนเงินก่อน';paidIn.focus();return}m.paid=pv;m.st='paid'}
+    else m.paid=p&&pv>=0?pv:null;
+    if(!m.extra){const lo=num(form.querySelector('#fLow').value),hi=num(form.querySelector('#fHigh').value);
+      if(!(lo>=0)||!(hi>=lo)){err.textContent='ตามงบ/ไม่เกิน ไม่ถูก (ไม่เกินต้อง ≥ ตามงบ)';return}m.low=lo;m.high=hi}
+    m.label=form.querySelector('#fLabel').value.trim();m.note=form.querySelector('#fNote').value.trim();
+    m.day=+form.querySelector('#fDay').value;m.pre=form.querySelector('#fPre').value==='1';
+    if(m.cat!=='food')m.sub=null;
+    const i=S.items.findIndex(z=>z.id===m.id);if(i>=0)S.items[i]=m;else S.items.push(m);
+    save();dlg.close();render();
+  };
+  const del=form.querySelector('#del');
+  if(del)del.onclick=()=>{if(confirm('ลบรายการนี้?')){S.items=S.items.filter(z=>z.id!==m.id);save();dlg.close();render()}};
+  dlg.showModal();
+  if(isNew)paidIn.focus();
+}
+
+// ---------- backup ----------
+function bindSet(){
+  $('#exp').onclick=async()=>{
+    const name=`japan-budget-backup-${new Date().toISOString().slice(0,16).replace(/[:T]/g,'-')}.json`;
+    const out={...S};delete out.dirty;
+    const blob=new Blob([JSON.stringify(out,null,1)],{type:'application/json'});
+    try{
+      const file=new File([blob],name,{type:'application/json'});
+      if(navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({files:[file],title:'Backup งบญี่ปุ่น'});
+      else{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000)}
+      S.lastBackup=Date.now();S.dirty=false;save(false);render();
+    }catch(e){if(e.name!=='AbortError')alert('Backup ไม่สำเร็จ: '+e.message)}
+  };
+  $('#impBtn').onclick=()=>$('#imp').click();
+  $('#imp').onchange=e=>{
+    const f=e.target.files[0];if(!f)return;const rd=new FileReader();
+    rd.onload=()=>{let d;try{d=JSON.parse(rd.result)}catch(x){d=null}
+      e.target.value='';
+      if(!validState(d)){$('#impErr').textContent='ไฟล์นี้ไม่ใช่ Backup ของแอปนี้ หรือไฟล์เสีย';return}
+      if(!confirm(`กู้คืน ${d.items.length} รายการ? ข้อมูลในเครื่องตอนนี้จะถูกแทนที่`))return;
+      d.dirty=false;S=d;save(false);tab='day';render()};
+    rd.readAsText(f);
+  };
+  $('#saveSet').onclick=()=>{
+    const v={fund:num($('#sFund').value),food:num($('#sFood').value),reserve:num($('#sRes').value),fx:num($('#sFx').value)};
+    if(!(v.fund>0&&v.food>=0&&v.reserve>=0&&v.fx>0&&v.fx<5)){$('#setErr').textContent='ตัวเลขไม่ถูก ตรวจอีกครั้ง';return}
+    Object.assign(S,v);save();render();
+  };
+  $('#reset').onclick=()=>{if(confirm('ล้างข้อมูลทั้งหมดกลับเป็นแผนตั้งต้น? (ย้อนกลับไม่ได้ ถ้าไม่ได้ Backup)')){S=seedState();save(false);tab='day';render()}};
+}
+
+render();
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
