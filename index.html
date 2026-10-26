@@ -253,7 +253,7 @@ const SEED=[
 [10,'train','JR Osakajokoen → Kyobashi · ¥150×4',600,600,'JPY','re'],
 [10,'train','JR Kyobashi → Morinomiya · ¥150×4',600,600,'JPY','re'],
 [10,'train','Metro Morinomiya → Osakako · ¥290×4',1160,1160,'JPY','re'],
-[10,'ticket','Kaiyukan · ¥2,800×4 (ยังไม่ซื้อตั๋ว)',11200,11200,'JPY','ok'],
+[10,'ticket','Kaiyukan · ¥2,800×4 (ยังไม่ซื้อตั๋ว)',11200,11200,'JPY','re'],
 [10,'train','Metro Osakako → Dobutsuen-mae · ¥290×4',1160,1160,'JPY','re'],
 [11,'train','Metro Dobutsuen-mae → Kitahama · ¥240×4',960,960,'JPY','re'],
 [11,'train','Keihan Kitahama → Fushimi-Inari · ¥480×4',1920,1920,'JPY','re'],
@@ -287,6 +287,7 @@ const SEED=[
 [16,'car','Toyota W1 Full Package · 16 พ.ย. 08:00 → 17 พ.ย. 20:00 · จองแล้ว',35090,35090,'JPY','ok',{pre:1,paid:35090}],
 [16,'fuel','น้ำมัน + ทางด่วน ETC + จอดรถ · 16–17 พ.ย.',0,0,'JPY','ap',{note:'ยังไม่ได้ประเมิน · กดแก้ใส่งบเองได้'}],
 [16,'stay','Solana Fujiyamanakako · 16–17 พ.ย.',6206.79,6206.79,'THB','ok',{pre:1,paid:6206.79}],
+[17,'ticket','Tenku no Torii ค่าเข้า · ¥100–200×4',400,800,'JPY','re'],
 [18,'ticket','Shibuya Sky รอบ 15:20 · ¥3,400×4 (เปิดขาย 4 พ.ย.)',13600,13600,'JPY','re'],
 [18,'taxi','งบแท็กซี่/Metro ตามแรงพ่อแม่',10000,14000,'JPY','ap'],
 [19,'taxi','รถ REVO → NRT T1 07:00 · Premium 6 ที่นั่ง',4995.17,4995.17,'THB','ok',{pre:1,paid:4995.17}]
@@ -442,7 +443,8 @@ function viewDay(){
   if(!c.over.length&&!c.unpaid.length&&c.spent>0)tips.push('<div class="tip good"><span>วันนี้ใช้ตามแผน เงินที่เหลือยกไปวันถัดไป</span></div>');
   const list=c.its.filter(it=>!it.extra).map(it=>itemRow(it)).join('')||'<div class="empty"><b>วันนี้ไม่มีรายการที่วางแผนไว้</b>จ่ายเงินแล้ว กดปุ่ม “+ จ่ายเพิ่ม” ด้านล่าง</div>';
   const extras=c.its.filter(it=>it.extra).map(it=>itemRow(it)).join('');
-  const budget=Math.round(c.low)===Math.round(c.high)?`<span>งบวันนี้</span><b>${yen(c.high)}</b>`:`<span>ตามงบ – ไม่เกิน</span><b class="rng">${range(yen,c.low,c.high)}</b>`;
+  const exF=`<span class="tiny muted nw">ไม่รวมอาหาร ${range(yen,c.low-c.cats.food.low,c.high-c.cats.food.high)}</span>`;
+  const budget=Math.round(c.low)===Math.round(c.high)?`<span>งบวันนี้ (รวมอาหาร)</span><b>${yen(c.high)}</b>${exF}`:`<span>ตามงบ – ไม่เกิน (รวมอาหาร)</span><b class="rng">${range(yen,c.low,c.high)}</b>${exF}`;
   return `${banner()}
   <div class="chips" role="tablist" aria-label="เลือกวัน">${chips}</div>
   <div class="shell"><div class="card">
