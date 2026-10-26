@@ -133,7 +133,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-user-select:none;user-s
 .tabbar .list button{flex:1;border:0;background:none;padding:8px 4px;font-size:15px;font-weight:550;color:var(--muted-foreground);border-radius:12px;min-height:48px;transition:background-color .2s,color .2s}
 .tabbar .list button.on{color:var(--foreground);background:var(--card);box-shadow:0 1px 2px rgba(31,42,68,.08),0 2px 8px -4px rgba(31,42,68,.18)}
 /* Button */
-.fab{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:536px;margin:0 auto 8px;height:52px;border-radius:16px;border:0;background:var(--primary);color:var(--primary-foreground);font-size:18px;font-weight:650;box-shadow:0 1px 2px rgba(200,50,74,.2),0 8px 18px -10px rgba(200,50,74,.6);transition:transform .16s var(--ease),filter .16s}
+.fab{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:536px;margin:0 auto 8px;min-height:48px;padding:0 20px;border-radius:999px;border:0;background:var(--primary);color:var(--primary-foreground);font-size:18px;font-weight:650;box-shadow:0 1px 2px rgba(200,50,74,.2),0 8px 18px -10px rgba(200,50,74,.6);transition:transform .16s var(--ease),filter .16s}
 .fab .plus{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:22px;line-height:1;font-weight:500}
 .fab:active{transform:scale(.98);filter:brightness(.95)}
 .fab[hidden]{display:none}
@@ -417,7 +417,7 @@ function itemRow(it,showDay){
   const st=it.st==='paid'?'<span class="badge paid">✓ จ่ายแล้ว</span>':it.st==='skip'?'<span class="badge skip">ไม่ใช้</span>':'<span class="badge plan">ยังไม่จ่าย</span>';
   const sub=it.cat==='food'&&it.sub==='snack'?' · กินเล่น':'';
   return `<div class="item" data-id="${it.id}" role="button" tabindex="0"><div class="main"><div class="lbl">${esc(it.label||CATS[it.cat].n).replace(/(\d)–(\d)/g,'$1–\u2060$2')}</div>
-  <div class="tiny muted">${showDay?'Day '+it.day+' · ':''}${CATS[it.cat].n}${sub}${it.pre?' · จ่ายล่วงหน้า':''}${it.opt?' · ทางเลือก':''}</div>
+  <div class="tiny muted">${showDay?'วันที่ '+it.day+' · ':''}${CATS[it.cat].n}${sub}${it.pre?' · จ่ายล่วงหน้า':''}${it.opt?' · ทางเลือก':''}</div>
   ${tagHtml(it)}${it.note?`<div class="tiny muted" style="margin-top:4px">${esc(it.note)}</div>`:''}</div>
   <div class="amt">${amtOf(it)}${st}</div><span class="chev" aria-hidden="true">›</span></div>`;
 }
@@ -443,12 +443,12 @@ function viewDay(){
   if(!c.over.length&&!c.unpaid.length&&c.spent>0)tips.push('<div class="tip good"><span>วันนี้ใช้ตามแผน เงินที่เหลือยกไปวันถัดไป</span></div>');
   const list=c.its.filter(it=>!it.extra).map(it=>itemRow(it)).join('')||'<div class="empty"><b>วันนี้ไม่มีรายการที่วางแผนไว้</b>จ่ายเงินแล้ว กดปุ่ม “+ จ่ายเพิ่ม” ด้านล่าง</div>';
   const extras=c.its.filter(it=>it.extra).map(it=>itemRow(it)).join('');
-  const exF=`<span class="tiny muted nw">ไม่รวมอาหาร ${range(yen,c.low-c.cats.food.low,c.high-c.cats.food.high)}</span>`;
+  const exF=`<span class="tiny muted">ไม่รวมอาหาร ${range(yen,c.low-c.cats.food.low,c.high-c.cats.food.high)}</span>`;
   const budget=Math.round(c.low)===Math.round(c.high)?`<span>งบวันนี้ (รวมอาหาร)</span><b>${yen(c.high)}</b>${exF}`:`<span>ตามงบ – ไม่เกิน (รวมอาหาร)</span><b class="rng">${range(yen,c.low,c.high)}</b>${exF}`;
   return `${banner()}
   <div class="chips" role="tablist" aria-label="เลือกวัน">${chips}</div>
   <div class="shell"><div class="card">
-    <span class="tape">Day ${cur} · ${WD[dt.getDay()]} ${cur} พ.ย.</span>
+    <span class="tape">วันที่ ${cur} · ${WD[dt.getDay()]} ${cur} พ.ย.</span>
     <div class="photo" data-photo-day="${cur}">${esc(x.place)}</div>
     <div class="kicker">${left<0?'เกินงบวันนี้':'เหลือใช้วันนี้'}</div>
     <div class="big ${left<0?'red':''}">${unit(yen(Math.abs(left)))}</div>
@@ -482,7 +482,7 @@ function viewTrip(){
     ${bar(p,CATS[k].c,ov)}<div class="row tiny muted"><span>จ่ายแล้ว ${baht(q.spent)}</span><span>${k==='misc'?'สำรอง '+baht(S.reserve):k==='food'?'งบ '+baht(S.food):'แผน '+range(bahtR,q.low,q.high)}</span></div></div>`}).join('');
   const outRows=Object.keys(CATS).filter(k=>CATS[k].out).map(k=>`<div class="kv"><span>${CATS[k].n}</span><b>${baht(t.byCat[k].spent)}</b></div>`).join('');
   const dayRows=DAYS.map(x=>{const c=dayCalc(x.d);const st=c.over.length?'<span class="badge" style="background:var(--destructive-soft);color:var(--destructive)">เกิน</span>':c.spent>0?'<span class="badge paid">ok</span>':'';
-    return `<tr class="go" data-day="${x.d}"><td>Day ${x.d}</td><td>${range(yen,c.low,c.high)}</td><td>${yen(c.spent)}</td><td>${st}</td></tr>`}).join('');
+    return `<tr class="go" data-day="${x.d}"><td>วันที่ ${x.d}</td><td>${range(yen,c.low,c.high)}</td><td>${yen(c.spent)}</td><td>${st}</td></tr>`}).join('');
   const free=t.freeLow>=0?`<b class="mid okc">${unit(range(bahtR,t.freeLow,t.freeHigh))}</b>`:t.freeHigh<0?`<b class="mid red">เกิน ${range(bahtR,-t.freeHigh,-t.freeLow)}</b>`:`<b class="mid red">${baht(t.freeLow)} ถึง ${baht(t.freeHigh)}</b>`;
   return `${banner()}
   <div class="shell"><div class="card">
@@ -511,10 +511,10 @@ function viewTrip(){
 // ---------- settings ----------
 function viewSet(){
   const lb=S.lastBackup?new Date(S.lastBackup).toLocaleString('th-TH'):'ยังไม่เคย';
-  return `<h2>Backup</h2><div class="card">
-  <div class="small muted">ข้อมูลเก็บในเครื่องนี้เท่านั้น · Backup ล่าสุด: <b class="nw" style="color:var(--foreground)">${esc(lb)}</b></div>
-  <div class="small muted" style="margin-top:4px">กด Backup แล้วเลือก "บันทึกไปยังไฟล์" หรือส่งเข้า LINE ตัวเอง</div>
-  <div class="btns"><button type="button" class="btn pri" id="exp">Backup (ส่งออกไฟล์)</button></div>
+  return `<h2>สำรองข้อมูล</h2><div class="card">
+  <div class="small muted">ข้อมูลเก็บในเครื่องนี้เท่านั้น · สำรองข้อมูล ล่าสุด: <b class="nw" style="color:var(--foreground)">${esc(lb)}</b></div>
+  <div class="small muted" style="margin-top:4px">กด สำรองข้อมูล แล้วเลือก "บันทึกไปยังไฟล์" หรือส่งเข้า LINE ตัวเอง</div>
+  <div class="btns"><button type="button" class="btn pri" id="exp">สำรองข้อมูล (ส่งออกไฟล์)</button></div>
   <div class="btns" style="margin-top:8px"><button type="button" class="btn sec" id="impBtn">กู้คืนจากไฟล์</button></div>
   <input type="file" id="imp" accept="application/json,.json" hidden>
   <div class="err" id="impErr"></div></div>
@@ -525,12 +525,12 @@ function viewSet(){
   <label for="sFx">อัตรา ฿ ต่อ ¥1</label><input id="sFx" inputmode="decimal" value="${S.fx}">
   <div class="err" id="setErr"></div>
   <div class="btns" style="margin-top:8px"><button type="button" class="btn pri" id="saveSet">บันทึก</button></div></div>
-  <h2>เริ่มใหม่</h2><div class="card"><div class="small muted">ล้างทุกอย่างกลับเป็นแผนตั้งต้น ควร Backup ก่อน</div>
+  <h2>เริ่มใหม่</h2><div class="card"><div class="small muted">ล้างทุกอย่างกลับเป็นแผนตั้งต้น ควร สำรองข้อมูล ก่อน</div>
   <div class="btns"><button type="button" class="btn del" id="reset">ล้างข้อมูลทั้งหมด</button></div></div>`;
 }
 function banner(){
-  if(!storageOK)return '<div class="banner" role="alert">บันทึกลงเครื่องไม่ได้ (โหมดส่วนตัว?) ข้อมูลอาจหาย · กด Backup ไว้ก่อน</div>';
-  if(S.dirty&&(!S.lastBackup||Date.now()-S.lastBackup>864e5))return '<button type="button" class="banner" data-goto="set"><span>มีรายการใหม่ยังไม่ได้ Backup</span><span class="go">ไป Backup ›</span></button>';
+  if(!storageOK)return '<div class="banner" role="alert">บันทึกลงเครื่องไม่ได้ (โหมดส่วนตัว?) ข้อมูลอาจหาย · กด สำรองข้อมูล ไว้ก่อน</div>';
+  if(S.dirty&&(!S.lastBackup||Date.now()-S.lastBackup>864e5))return '<button type="button" class="banner" data-goto="set"><span>มีรายการใหม่ยังไม่ได้ สำรองข้อมูล</span><span class="go">ไป สำรองข้อมูล ›</span></button>';
   return '';
 }
 let toastT;
@@ -584,7 +584,7 @@ function openEdit(it){
   ${m.extra?'':`<label>สถานะ</label><div class="seg" id="fSt"><button type="button" data-st="plan" class="${m.st==='plan'?'on':''}">ยังไม่จ่าย</button><button type="button" data-st="paid" class="${m.st==='paid'?'on':''}">จ่ายแล้ว</button><button type="button" data-st="skip" class="${m.st==='skip'?'on':''}">ไม่ใช้</button></div>
   <div class="grid2"><div><label for="fLow">ตามงบ (ต่ำสุด)</label><input id="fLow" inputmode="decimal" value="${m.low}"></div><div><label for="fHigh">ไม่เกิน</label><input id="fHigh" inputmode="decimal" value="${m.high}"></div></div>`}
   <label for="fLabel">รายละเอียด</label><input id="fLabel" value="${esc(m.label)}" placeholder="ราเม็ง 4 ที่">
-  <div class="grid2"><div><label for="fDay">วัน</label><select id="fDay">${DAYS.map(x=>`<option value="${x.d}"${x.d===m.day?' selected':''}>Day ${x.d}</option>`).join('')}</select></div>
+  <div class="grid2"><div><label for="fDay">วัน</label><select id="fDay">${DAYS.map(x=>`<option value="${x.d}"${x.d===m.day?' selected':''}>วันที่ ${x.d}</option>`).join('')}</select></div>
   <div><label for="fPre">จ่ายก่อนเดินทาง</label><select id="fPre"><option value="0">ไม่ใช่</option><option value="1"${m.pre?' selected':''}>ใช่</option></select></div></div>
   <label for="fNote">หมายเหตุ</label><input id="fNote" value="${esc(m.note||'')}">
   ${isNew?'':'<div class="btns"><button type="button" class="btn del" id="del">ลบรายการนี้</button></div>'}
@@ -607,7 +607,7 @@ function openEdit(it){
     m.day=+form.querySelector('#fDay').value;m.pre=form.querySelector('#fPre').value==='1';
     if(m.cat!=='food')m.sub=null;
     const i=S.items.findIndex(z=>z.id===m.id);if(i>=0)S.items[i]=m;else S.items.push(m);
-    save();closeSheet();render();toast(storageOK?'บันทึกแล้ว':'บันทึกลงเครื่องไม่ได้ · กด Backup ไว้ก่อน');
+    save();closeSheet();render();toast(storageOK?'บันทึกแล้ว':'บันทึกลงเครื่องไม่ได้ · กด สำรองข้อมูล ไว้ก่อน');
   };
   const del=form.querySelector('#del');
   if(del)del.onclick=()=>{if(confirm('ลบรายการนี้?')){const i=S.items.findIndex(z=>z.id===m.id),old=S.items[i];S.items=S.items.filter(z=>z.id!==m.id);save();closeSheet();render();
@@ -631,17 +631,17 @@ function bindSet(){
     const blob=new Blob([JSON.stringify(out,null,1)],{type:'application/json'});
     try{
       const file=new File([blob],name,{type:'application/json'});
-      if(navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({files:[file],title:'Backup งบญี่ปุ่น'});
+      if(navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({files:[file],title:'สำรองข้อมูล งบญี่ปุ่น'});
       else{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000)}
-      S.lastBackup=Date.now();S.dirty=false;save(false);render();toast('Backup แล้ว');
-    }catch(e){if(e.name!=='AbortError')alert('Backup ไม่สำเร็จ: '+e.message)}
+      S.lastBackup=Date.now();S.dirty=false;save(false);render();toast('สำรองข้อมูล แล้ว');
+    }catch(e){if(e.name!=='AbortError')alert('สำรองข้อมูล ไม่สำเร็จ: '+e.message)}
   };
   $('#impBtn').onclick=()=>$('#imp').click();
   $('#imp').onchange=e=>{
     const f=e.target.files[0];if(!f)return;const rd=new FileReader();
     rd.onload=()=>{let d;try{d=JSON.parse(rd.result)}catch(x){d=null}
       e.target.value='';
-      if(!validState(d)){$('#impErr').textContent='ไฟล์นี้ไม่ใช่ Backup ของแอปนี้ หรือไฟล์เสีย';return}
+      if(!validState(d)){$('#impErr').textContent='ไฟล์นี้ไม่ใช่ สำรองข้อมูล ของแอปนี้ หรือไฟล์เสีย';return}
       if(!confirm(`กู้คืน ${d.items.length} รายการ? ข้อมูลในเครื่องตอนนี้จะถูกแทนที่`))return;
       d.dirty=false;S=d;save(false);tab='day';render();toast(`กู้คืน ${d.items.length} รายการแล้ว`)};
     rd.readAsText(f);
@@ -651,7 +651,7 @@ function bindSet(){
     if(!(v.fund>0&&v.food>=0&&v.reserve>=0&&v.fx>0&&v.fx<5)){$('#setErr').textContent='ตัวเลขไม่ถูก ตรวจอีกครั้ง (อัตราแลกเงินต้องมากกว่า 0 และน้อยกว่า 5)';return}
     Object.assign(S,v);save();render();toast('บันทึกงบแล้ว');
   };
-  $('#reset').onclick=()=>{if(confirm('ล้างข้อมูลทั้งหมดกลับเป็นแผนตั้งต้น? (ย้อนกลับไม่ได้ ถ้าไม่ได้ Backup)')){S=seedState();save(false);tab='day';render()}};
+  $('#reset').onclick=()=>{if(confirm('ล้างข้อมูลทั้งหมดกลับเป็นแผนตั้งต้น? (ย้อนกลับไม่ได้ ถ้าไม่ได้ สำรองข้อมูล)')){S=seedState();save(false);tab='day';render()}};
 }
 
 render();
